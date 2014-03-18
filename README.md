@@ -1,9 +1,8 @@
 surfgen
 =======
 
-surfgen is an implicit surface reconstruction program. It uses the marching cubes algorithm to reconstruct surfaces from a dozen implicit functions for various surfaces. 
-![ScreenShot](https://raw.github.com/marckhoury/IsoRender/master/screenshot.png)
-![ScreenShot](https://raw.github.com/marckhoury/IsoRender/master/screenshot.png)
+surfgen is an implicit surface reconstruction program. It uses the marching cubes algorithm to reconstruct surfaces from a dozen implicit functions for various surfaces.
+
 ![ScreenShot](https://raw.github.com/marckhoury/IsoRender/master/screenshot.png)
 ![ScreenShot](https://raw.github.com/marckhoury/IsoRender/master/screenshot.png)
 
