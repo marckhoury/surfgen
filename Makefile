@@ -1,8 +1,17 @@
-CC=g++
+OS = $(shell uname -s)
+
+ifeq ($(OS),Darwin)
+    CC = clang++
+    LIBS = -framework GLUT -framework OpenGL -framework Cocoa
+    OPT = -O2 -std=c++11 -stdlib=libc++
+else
+    CC = g++
+    LIBS = -lGL -lglut -lGLU 
+    OPT = -O2 -std=c++0x
+endif
+
 OBJECTS = io.o mesh.o grid.o gengrid.o marchingcubes.o mathutil.o
-LIBS = -lGL -lglut -lGLU 
 TARGET = surfgen
-OPT = -O2 -std=c++0x
 
 surfgen: $(OBJECTS)
 	$(CC) $(OPT) -o $(TARGET) main.cpp $(OBJECTS) $(LIBS)

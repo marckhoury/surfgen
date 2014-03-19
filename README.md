@@ -31,4 +31,4 @@ Bohemian Star           |m
 
 Build
 =====
-surfgen uses OpenGL, GLU, and GLUT for rendering and some features from the C++11 standard. The code has been built on both Ubuntu Linux and MacOS systems using g++ and clang++ respectively. Makefiles are included for both platforms. To build on a Linux system, simply type 'make' on the command line. Mac users need to type 'make -f Makefile.apple' to ensure the correct makefile is used.
+surfgen uses OpenGL, GLU, and GLUT for rendering and some features from the C++11 standard. The code has been built on both Ubuntu Linux and MacOS systems using g++ and clang++ respectively. A Makefile is included that works on both platforms.
