@@ -3,10 +3,7 @@ surfgen
 
 surfgen is an implicit surface reconstruction program. It uses the marching cubes algorithm to reconstruct surfaces from a dozen implicit functions for various surfaces. Some of the beautiful surfaces that surfgen can create are shown below.
 
-![ScreenShot]()
-![ScreenShot]()
-![ScreenShot]()
-![ScreenShot]()
+![ScreenShot](https://raw.github.com/marckhoury/surfgen/master/images/surfaces.png)
 
 Interaction
 ===========
