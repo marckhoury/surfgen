@@ -73,76 +73,61 @@ void reshape(int w, int h)
     glViewport(0, 0, w, h);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(60, static_cast<double>(w)/h, 0.1, 100);
+    gluPerspective(ctx.fovy, static_cast<double>(w)/h, ctx.znear, ctx.zfar);
     glMatrixMode(GL_MODELVIEW);
 }
 
 void keyboard(unsigned char key, int x, int y)
 {
+    SurfaceType surface_type = NO_SURFACE;
     switch(key) {
         case 'a':
-            generate(grid, JACK);
-            mesh = marching_cubes(grid, 0);
+            surface_type = JACK;
         break;
         case 's':
-            generate(grid, WIFFLE_CUBE);
-            mesh = marching_cubes(grid, 0);
+            surface_type = WIFFLE_CUBE;
         break;
         case 'd':
-            generate(grid, TORUS);
-            mesh = marching_cubes(grid, 0);
+            surface_type = TORUS;
         break;
         case 'f':
-            generate(grid, SPHERE);
-            mesh = marching_cubes(grid, 0);
+            surface_type = SPHERE;
         break;
         case 'g':
-            generate(grid, MOBIUS_STRIP);
-            mesh = marching_cubes(grid, 0);
+            surface_type = MOBIUS_STRIP;
         break;
         case 'h':
-            generate(grid, KLEIN_BOTTLE);
-            mesh = marching_cubes(grid, 0);
+            surface_type = KLEIN_BOTTLE;
         break;
         case 'j':
-            generate(grid, HYPERBOLOID_ONE_SHEET);
-            mesh = marching_cubes(grid, 0);
+            surface_type = HYPERBOLOID_ONE_SHEET;
         break;
         case 'k':
-            generate(grid, CAYLEY);
-            mesh = marching_cubes(grid, 0);
+            surface_type = CAYLEY;
         break;
         case 'l':
-            generate(grid, BOHEMIAN_DOME);
-            mesh = marching_cubes(grid, 0);
+            surface_type = BOHEMIAN_DOME;
         break;
         case 'z':
-            generate(grid, CHUBS);
-            mesh = marching_cubes(grid, 0);
+            surface_type = CHUBS;
         break;
         case 'x':
-            generate(grid, QUADRIFOLIA);
-            mesh = marching_cubes(grid, 0);
+            surface_type = QUADRIFOLIA;
         break;
         case 'c':
-            generate(grid, DEVIL);
-            mesh = marching_cubes(grid, 0);
+            surface_type = DEVIL;
         break;
         case 'v':
-            generate(grid, QUARTIC_CYLINDER);
-            mesh = marching_cubes(grid, 0);
+            surface_type = QUARTIC_CYLINDER;
         break;
         case 'b':
-            generate(grid, GUMDROP_TORUS);
-            mesh = marching_cubes(grid, 0);
+            surface_type = GUMDROP_TORUS;
         break;
         case 'n':
-            generate(grid, BARTH_SEXTIC);
-            mesh = marching_cubes(grid, 0);
+            surface_type = BARTH_SEXTIC;
         break; 
         case 'm':
-            generate(grid, BOHEMIAN_STAR);
-            mesh = marching_cubes(grid, 0);
+            surface_type = BOHEMIAN_STAR;
         break;
         case 'w':
             ctx.wireframe = !ctx.wireframe;
@@ -153,6 +138,12 @@ void keyboard(unsigned char key, int x, int y)
         default:
             cout << "Unassigned character: " << key << endl;
         break;
+    }
+
+    if(surface_type != NO_SURFACE) {
+        generate(grid, surface_type);
+        mesh = marching_cubes(grid, 0);
+        center_on_screen(mesh);
     }
 }
 
@@ -248,7 +239,7 @@ void init()
     glEnable(GL_DEPTH_TEST);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(60, 1, 0.1, 100);
+    gluPerspective(ctx.fovy, 1, ctx.znear, ctx.zfar);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 }
