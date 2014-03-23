@@ -410,15 +410,20 @@ Vertex* lerp(double v[3], double sv, double u[3], double su, double isovalue)
     return w;
 }
 
-Vertex* merge_vertex(Vertex* v, unordered_set<Vertex*, vertex_hash, vertex_equals>& points, Mesh& mesh)
+bool is_degenerate(Vertex* v0, Vertex* v1, Vertex* v2)
 {
-    unordered_set<Vertex*>::const_iterator u = points.find(v);
+    return v0 == v1 || v1 == v2 || v2 == v0;
+}
 
-    if(u != points.end()) {
+Vertex* merge_vertex(Vertex* v, unordered_set<Vertex*, vertex_hash, vertex_equals>& vertex_set, Mesh& mesh)
+{
+    unordered_set<Vertex*>::const_iterator u = vertex_set.find(v);
+
+    if(u != vertex_set.end()) {
         delete v;
         return *u;
     }
-    points.insert(v);
+    vertex_set.insert(v);
     mesh.add(v);
     return v;
 }
@@ -451,7 +456,7 @@ Mesh marching_cubes(Grid& grid, double isovalue)
     Mesh mesh;
     int offset[8];
     Vertex* vertices[12];
-    unordered_set<Vertex*, vertex_hash, vertex_equals> surface_vertices;
+    unordered_set<Vertex*, vertex_hash, vertex_equals> vertex_set;
     
     compute_offset(grid, offset);
 
@@ -470,38 +475,40 @@ Mesh marching_cubes(Grid& grid, double isovalue)
                         double vc[3] = {v[0]*grid.get_spacing(0), v[1]*grid.get_spacing(1), v[2]*grid.get_spacing(2)};
                         double uc[3] = {u[0]*grid.get_spacing(0), u[1]*grid.get_spacing(1), u[2]*grid.get_spacing(2)};
                         vertices[i] = lerp(vc, sv, uc, su, isovalue);
-                        vertices[i] = merge_vertex(vertices[i], surface_vertices, mesh);
+                        vertices[i] = merge_vertex(vertices[i], vertex_set, mesh);
                     }
                 }
 
                 for(int i = 0; triangle_table[table_index][i] != -1; i += 3) {
-                    Face* f = new Face;
                     Vertex *v0, *v1, *v2;
 
                     v0 = vertices[triangle_table[table_index][i]];
                     v1 = vertices[triangle_table[table_index][i+1]];
                     v2 = vertices[triangle_table[table_index][i+2]];
 
-                    f->v.push_back(v0);
-                    f->v.push_back(v1);
-                    f->v.push_back(v2);
-                    v0->f.push_back(f);
-                    v1->f.push_back(f);
-                    v2->f.push_back(f);
+                    if(!is_degenerate(v0, v1, v2)) {
+                        Face* f = new Face;
+                        
+                        f->v.push_back(v0);
+                        f->v.push_back(v1);
+                        f->v.push_back(v2);
+                        v0->f.push_back(f);
+                        v1->f.push_back(f);
+                        v2->f.push_back(f);
 
-                    Edge* e0 = create_edge(v0, v1, f, mesh);
-                    Edge* e1 = create_edge(v1, v2, f, mesh);
-                    Edge* e2 = create_edge(v2, v0, f, mesh);
+                        Edge* e0 = create_edge(v0, v1, f, mesh);
+                        Edge* e1 = create_edge(v1, v2, f, mesh);
+                        Edge* e2 = create_edge(v2, v0, f, mesh);
                     
-                    f->e.push_back(e0);
-                    f->e.push_back(e1);
-                    f->e.push_back(e2);
-                    mesh.add(f);
+                        f->e.push_back(e0);
+                        f->e.push_back(e1);
+                        f->e.push_back(e2);
+                        mesh.add(f);
+                    }
                 }
             }
         }
     }
-    center_on_screen(mesh);
     compute_normals(mesh);
     return mesh;
 }
