@@ -13,13 +13,6 @@ using std::endl;
 
 class Grid
 {
-private:
-	vector<double> grid;
-	size_t axis[3];
-	double spacing[3];
-	int offset[8];
-	
-	void compute_offset();
 public:
 	Grid(size_t axis[3], double spacing[3]);
 	Grid(const Grid& rhs);
@@ -35,6 +28,14 @@ public:
 	bool is_intersected(int iv, double iso);
 	Grid& operator=(const Grid& rhs);
 	friend ostream& operator<<(ostream& os, Grid& g);
+
+private:
+	vector<double> grid;
+	size_t axis[3];
+	double spacing[3];
+	int offset[8];
+	
+	void compute_offset();
 };
 
 #endif
