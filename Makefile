@@ -10,7 +10,7 @@ else
     OPT = -O2 -std=c++0x
 endif
 
-OBJECTS = io.o mesh.o grid.o gengrid.o marchingcubes.o mathutil.o
+OBJECTS = io.o mesh.o grid.o gengrid.o cutfunc.o marchingcubes.o mathutil.o
 TARGET = surfgen
 
 surfgen: $(OBJECTS)
@@ -27,6 +27,9 @@ grid.o: grid.h grid.cpp
 
 gengrid.o: gengrid.h gengrid.cpp
 	$(CC) $(OPT) -c gengrid.cpp
+
+cutfunc.o: cutfunc.h cutfunc.cpp
+	$(CC) $(OPT) -c cutfunc.cpp
 
 marchingcubes.o: marchingcubes.h marchingcubes.cpp
 	$(CC) $(OPT) -c marchingcubes.cpp
