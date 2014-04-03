@@ -1,0 +1,9 @@
+#ifndef CUTFUNC_H
+#define CUTFUNC_H
+
+#include <cmath>
+
+enum SurfaceType {JACK, WIFFLE_CUBE, TORUS, SPHERE, MOBIUS_STRIP, KLEIN_BOTTLE, HYPERBOLOID_ONE_SHEET, CAYLEY, BOHEMIAN_DOME, CHUBS, QUADRIFOLIA, DEVIL, QUARTIC_CYLINDER, GUMDROP_TORUS, BARTH_SEXTIC, BOHEMIAN_STAR, NO_SURFACE};
+
+double eval(double x, double y, double z, SurfaceType surface_type);
+#endif
