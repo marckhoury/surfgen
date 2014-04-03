@@ -142,7 +142,7 @@ void keyboard(unsigned char key, int x, int y)
 
     if(surface_type != NO_SURFACE) {
         generate(grid, surface_type);
-        mesh = marching_cubes(grid, 0);
+        mesh = marching_cubes(grid, 0, surface_type);
         center_on_screen(mesh);
     }
 }
