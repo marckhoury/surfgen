@@ -1,5 +1,18 @@
 #include "mathutil.h"
 
+void normalize(double* v)
+{
+    double length = sqrt(v[0]*v[0] + v[1]*v[1] + v[2]*v[2]);
+    v[0] /= length; v[1] /= length; v[2] /= length;
+}
+
+void cross_product(double* v, double* u, double* res)
+{
+    res[0] = (v[1]*u[2] - v[2]*u[1]);
+    res[1] = (v[2]*u[0] - v[0]*u[2]);
+    res[2] = (v[0]*u[1] - v[1]*u[0]);
+}
+
 void inverse(float* m, float* res)
 {
     float det;
