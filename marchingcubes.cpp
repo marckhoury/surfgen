@@ -493,7 +493,7 @@ void compute_offset(Grid& grid, int offset[8])
     offset[7] = grid.index(0,1,1);
 }
 
-Mesh marching_cubes(Grid& grid, double isovalue, SurfaceType surface_type = NO_SURFACE)
+Mesh marching_cubes(Grid& grid, double isovalue, SurfaceType surface_type)
 {
     Mesh mesh;
     int offset[8];
