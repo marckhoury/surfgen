@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <cstdlib>
 #include <cmath>
+#include "mathutil.h"
 
 using std::vector;
 using std::max;
@@ -59,7 +60,6 @@ private:
 Edge* get_edge(Vertex* v0, Vertex* v1);
 Edge* create_edge(Vertex* v0, Vertex* v1, Face* f, Mesh& mesh);
 void normalize(Mesh& mesh);
-void cross_product(double* v, double* u, double* res);
 void compute_normals(Mesh& mesh);
 void center_on_screen(Mesh& mesh);
 #endif

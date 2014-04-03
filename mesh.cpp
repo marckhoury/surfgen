@@ -81,16 +81,8 @@ void normalize(Mesh& mesh)
 {
     for(int i = 0; i < mesh.vertex_count(); i++) {
         Vertex* v = mesh.get_vertex(i);
-        double length = sqrt(v->n[0]*v->n[0] + v->n[1]*v->n[1] + v->n[2]*v->n[2]);
-        v->n[0] /= length; v->n[1] /= length; v->n[2] /= length;
+        normalize(v->n);
     }
-}
-
-void cross_product(double* v, double* u, double* res)
-{
-    res[0] = (v[1]*u[2] - v[2]*u[1]);
-    res[1] = (v[2]*u[0] - v[0]*u[2]);
-    res[2] = (v[0]*u[1] - v[1]*u[0]);
 }
 
 void compute_normals(Mesh& mesh)
