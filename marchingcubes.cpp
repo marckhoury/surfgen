@@ -410,6 +410,48 @@ Vertex* lerp(double v[3], double sv, double u[3], double su, double isovalue)
     return w;
 }
 
+Vertex* find_cut_point(double v[3], double sv, double u[3], double su, double isovalue, SurfaceType surface_type)
+{
+    Vertex* w = new Vertex;
+    double low = 0.0, high = 1.0, mid;
+
+    if(isovalue == sv) {
+        mid = low;
+    } else if(isovalue == su) {
+        mid = high;
+    } else {
+        double val;
+        for(int i = 0; i < 100; i++) {
+            mid = 0.5 * (low + high);
+            val = eval((1-mid)*v[0] + mid*u[0],
+                       (1-mid)*v[1] + mid*u[1],
+                       (1-mid)*v[2] + mid*u[2],
+                       surface_type);
+            
+            if(val == isovalue) {
+                break;
+            } else if((val > isovalue)  != (su > isovalue)) {
+                low = mid;
+                sv = val;
+            } else {
+                high = mid;
+                su = val;
+            }
+        }
+        if(val != isovalue) {
+            mid = (su * high - sv * low) / (su - sv);
+        }
+    }
+    
+    for(int i = 0; i < 3; i++) {
+        w->v[i] = (1 - mid)*v[i] + mid*u[i];
+    }
+    w->has_normal = w->has_texture = false;
+    w->n[0] = w->n[1] = w->n[2] = 0;
+    w->t[0] = w->t[1] = 0;
+    return w;
+}
+
 bool is_degenerate(Vertex* v0, Vertex* v1, Vertex* v2)
 {
     return v0 == v1 || v1 == v2 || v2 == v0;
@@ -451,7 +493,7 @@ void compute_offset(Grid& grid, int offset[8])
     offset[7] = grid.index(0,1,1);
 }
 
-Mesh marching_cubes(Grid& grid, double isovalue)
+Mesh marching_cubes(Grid& grid, double isovalue, SurfaceType surface_type = NO_SURFACE)
 {
     Mesh mesh;
     int offset[8];
@@ -472,9 +514,17 @@ Mesh marching_cubes(Grid& grid, double isovalue)
                         get_grid_edge(x, y, z, i, v, u);
                         double sv = grid[grid.index(v[0],v[1],v[2])];
                         double su = grid[grid.index(u[0],u[1],u[2])];
-                        double vc[3] = {v[0]*grid.get_spacing(0), v[1]*grid.get_spacing(1), v[2]*grid.get_spacing(2)};
-                        double uc[3] = {u[0]*grid.get_spacing(0), u[1]*grid.get_spacing(1), u[2]*grid.get_spacing(2)};
-                        vertices[i] = lerp(vc, sv, uc, su, isovalue);
+                        double vc[3] = {(v[0]-grid.get_axis(0)/2.0)*grid.get_spacing(0), 
+                                        (v[1]-grid.get_axis(1)/2.0)*grid.get_spacing(1), 
+                                        (v[2]-grid.get_axis(2)/2.0)*grid.get_spacing(2)};
+                        double uc[3] = {(u[0]-grid.get_axis(0)/2.0)*grid.get_spacing(0),
+                                        (u[1]-grid.get_axis(1)/2.0)*grid.get_spacing(1), 
+                                        (u[2]-grid.get_axis(2)/2.0)*grid.get_spacing(2)};
+                        if(surface_type == NO_SURFACE) {
+                            vertices[i] = lerp(vc, sv, uc, su, isovalue);
+                        } else {
+                            vertices[i] = find_cut_point(vc, sv, uc, su, isovalue, surface_type);
+                        }
                         vertices[i] = merge_vertex(vertices[i], vertex_set, mesh);
                     }
                 }
